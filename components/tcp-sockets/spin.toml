@@ -1,0 +1,22 @@
+spin_manifest_version = 2
+
+[application]
+name = "request-shape"
+version = "0.1.0"
+authors = ["Fermyon Engineering <engineering@fermyon.com>"]
+
+[variables]
+port = { required = true }
+
+[[trigger.http]]
+route = "/..."
+component = "test"
+
+[component.test]
+source = "../../target/wasm32-wasi/release/tcp_sockets_test_component.wasm"
+environment = { ADDRESS = "127.0.0.1:{{ port }}" }
+allowed_outbound_hosts = ["*://127.0.0.1:{{ port }}"]
+[component.test.variables]
+port = "{{ port }}"
+[component.test.build]
+command = "cargo build --target wasm32-wasi --release"
